@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/t57r/gator/internal/config"
 )
@@ -14,12 +15,26 @@ func main() {
 	}
 	fmt.Printf("Read config: %+v\n", cfg)
 
-	err = cfg.SetUser("t57r")
-
-	cfg, err = config.Read()
-	if err != nil {
-		log.Fatalf("error reading config: %v", err)
+	s := state{
+		config: &cfg,
 	}
-	fmt.Printf("Read config again: %+v\n", cfg)
+	cmds := commands{
+		hanlders: make(map[string]func(*state, command) error),
+	}
+	cmds.register("login", hanlderLogin)
 
+	if len(os.Args) < 2 {
+		fmt.Println("Please add args to the command")
+		os.Exit(1)
+	}
+	commandName := os.Args[1]
+
+	err = cmds.run(&s, command{
+		name: commandName,
+		args: os.Args[1:],
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 }
