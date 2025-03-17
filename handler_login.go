@@ -1,21 +1,27 @@
 package main
 
 import (
-	"errors"
+	"context"
 	"fmt"
 )
 
 func hanlderLogin(s *state, cmd command) error {
 	if len(cmd.args) != 2 {
-		return errors.New("login: expecting username as an argument")
+		return fmt.Errorf("usage: %s <name>", cmd.name)
 	}
 
 	userName := cmd.args[1]
-	err := s.config.SetUser(userName)
+
+	_, err := s.db.GetUser(context.Background(), userName)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't find user: %w", err)
 	}
 
-	fmt.Printf("The user name has been changed to %s\n", userName)
+	err = s.config.SetUser(userName)
+	if err != nil {
+		return fmt.Errorf("coulnd't set current user: %w", err)
+	}
+
+	fmt.Println("User switched successfully!")
 	return nil
 }
