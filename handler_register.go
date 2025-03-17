@@ -9,7 +9,7 @@ import (
 	"github.com/t57r/gator/internal/database"
 )
 
-func hanlderRegister(s *state, cmd command) error {
+func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) != 2 {
 		return fmt.Errorf("register: expecting username as an argument")
 	}

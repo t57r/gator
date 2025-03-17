@@ -31,8 +31,9 @@ func main() {
 	cmds := commands{
 		hanlders: make(map[string]func(*state, command) error),
 	}
-	cmds.register("login", hanlderLogin)
-	cmds.register("register", hanlderRegister)
+	cmds.register("login", handlerLogin)
+	cmds.register("register", handlerRegister)
+	cmds.register("reset", handlerReset)
 
 	if len(os.Args) < 2 {
 		fmt.Println("Please add args to the command")
