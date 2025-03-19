@@ -9,12 +9,7 @@ import (
 	"github.com/t57r/gator/internal/database"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
-	user, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
-	if err != nil {
-		return err
-	}
-
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 3 {
 		return fmt.Errorf("addfeed: expecting name and URL as the arguments")
 	}
